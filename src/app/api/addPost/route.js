@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import User from "../model/user";
 import { connect } from "../connect";
 import Posts from "../model/blogpost";
+// import Posts from "../model/blogpost";
 
 export async function GET(){
     return NextResponse.json({
@@ -10,35 +11,63 @@ export async function GET(){
 }
 
 export async function POST(request){
-    const {userId, title,description,image}=await request.json();
+    const reqBody = await request.json();
+    console.log(reqBody);
 
+    await connect();
     try{
-        await connect();
-        const findUser=await User.findById(userId);
-        if(!findUser){
-            return NextResponse.status(404).json({
-                message: "User not found"
+        const findUser=await User.findOne({
+            email: reqBody.email
+        });
+
+        if(findUser){
+            const data={
+                email:reqBody.email,
+                title:reqBody.title,
+                description:reqBody.description,
+                image:reqBody.image,
+                likes:[],
+                comment:[],
+                share:[],
+                dislikes:[],
+                timestamp:new Date()
+            }
+            const newPost=await new Posts({
+                email:reqBody.email,
+                title:reqBody.title,
+                description:reqBody.description,
+                image:reqBody.image,
+                userProfilePic:reqBody.userProfilePic,
+                fullname:reqBody.fullname
             })
-        }else{
-            const newPost=new Posts({
-                userId:userId,
-                title:title,
-                description:description,
-                image:image
-            })
-            const updateNow=await User.findByIdAndUpdate(userId,{
+            const updateNow=await User.findByIdAndUpdate(findUser._id,{
                 $push:{
-                    post:newPost._id
+                    post:data
                 }
             })
-            await newPost.save();
-            return NextResponse.status(200).json({
-                message: "Post created"
-            })
+            const completed=await newPost.save();
+            if(completed){
+                return NextResponse.json({
+                    message: "Post uploded successfully",   
+            },{status:202})
+            }else{
+                return NextResponse.json({
+                    message: "Something went wrong"
+                },{status:404})
+            }
+        }else{
+            return NextResponse.json({
+                message: "User not found"
+            },{status:404})
         }    
     }catch(err){
-        return NextResponse.status(500).json({
+        return NextResponse.json({
+            status: 400,
             message: err.message
-        })
+        },{status:500})
     }
+    // return NextResponse.json({
+    //     message: reqBody,
+    //     status:200,
+    // })
 }

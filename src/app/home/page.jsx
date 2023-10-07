@@ -42,8 +42,22 @@ const page = () => {
         ):("")}
         <TotalPosts />
       </div>
-      <div className="w-52">
-        <h1>okey</h1>
+      <div className="w-[300px] p-3">
+        <h1 className="text-xl font-bold mt-5 text-red-500">Your total Followers</h1>
+        {userData?.following?.length>0?(userData.following?.map((item)=>(
+          <div>
+            <h1>{item.fullname}</h1>
+            <hr />
+          </div>
+        ))):(<h1 className="text-gray-600 mb-2">No one is following you yet..</h1>)}
+        <hr />
+        <h1 className="text-xl font-bold mt-5 text-red-500">People Your Follow</h1>
+        {userData?.follow?.length>0?(userData.follow?.map((item)=>(
+          <div>
+            <h1>{item.fullname}</h1>
+          </div>
+        ))):(<h1 className="text-gray-600 mb-2">You are following no one yet..</h1>)}
+        <hr />
       </div>
     </div>
   )

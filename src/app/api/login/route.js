@@ -6,8 +6,10 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 export async function GET(){
+    const datas=await User.find();
     return NextResponse.json({
-        message: "Hello World"
+        message: "Hello World",
+        data:datas
     })
 }
 
@@ -34,15 +36,13 @@ export async function POST(request){
                 },{status:200})
             }else{
                 return NextResponse.json({
-                    status: 400,
                     message: "Invalid Password"
-                })
+                },{status:400})
             }
         }else{
             return NextResponse.json({
-                status: 400,
                 message: "Invalid Credentials"
-            })
+            },{status:400})
         }
     }catch(err){
         return NextResponse.json({

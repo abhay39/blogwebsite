@@ -29,13 +29,18 @@ const UserSchema=new mongoose.Schema({
     },
     post:{
         type:[],
-        default:[]
+        default:[],
+        
     },
     follow:{
         type:[],
         default:[]
     },
     following:{
+        type:[],
+        default:[]
+    },
+    dislikes:{
         type:[],
         default:[]
     },
