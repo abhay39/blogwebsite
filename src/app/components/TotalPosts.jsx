@@ -56,7 +56,7 @@ const TotalPosts = () => {
       toast.error("You can't dislike your own post")
     }else{
       const res=await fetch(`/api/getPosts/`,{
-        method:"POST",
+        method:"PUT",
         headers:{
           "Content-Type":"application/json"
         },
@@ -128,7 +128,7 @@ const TotalPosts = () => {
           </div>
           <div className="flex items-center ml-4">
             <p className="font-bold text-red-600 select-none">{item.dislikes.length}</p>
-            {userData?.dislikes?.find(likeId=>likeId==item._id)?(<BiSolidDislike  className="ml-1 cursor-pointer" size={20} />):(<BiDislike  className="ml-1 cursor-pointer" size={20}  />)}
+            {userData?.dislikes?.find(likeId=>likeId==item._id)?(<BiSolidDislike  className="ml-1 cursor-pointer" onClick={()=>handleLikeDislikes(item)} size={20} />):(<BiDislike  className="ml-1 cursor-pointer" size={20}  onClick={()=>handleLikeDislikes(item)} />)}
           </div>
           <div className="flex items-center ml-4">
             <p className="font-bold text-red-600 select-none">{item.comment.length}</p>
